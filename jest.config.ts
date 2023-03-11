@@ -1,20 +1,13 @@
-module.exports = {
-    'roots': [
-        '<rootDir>/src'
-    ], 
-    'testMatch': [
-        '**/__tests__/**/*.+(ts|tsx|js)',
-        '**/?(*.)+(spec|test).+(ts|tsx|js)'
-    ], 
-    'transform': {
-        '^.+\\.(ts|tsx)$': 'ts-jest'
-    }, 
-    'verbose': true,
-
-    'globals': {
-        'ts-jest': {
-            diagnostics: false
-        }
-    }
-
+import type { Config } from '@jest/types'
+// Sync object
+const config: Config.InitialOptions = {
+    transform: {
+        '^.+\\.ts?$': 'ts-jest',
+    },
+    testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
+    testPathIgnorePatterns: ['/lib/', '/node_modules/'],
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+    collectCoverage: true,
 }
+
+export default config
