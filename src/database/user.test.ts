@@ -2,7 +2,6 @@ import { User } from '../type'
 import { createUser, getUser } from './user'
 
 test('Test create user function', async () => {
-    jest.setTimeout(30000)
     const sample: User =
     {
         address: 'sample address' + Date.now().toString(),
@@ -17,7 +16,6 @@ test('Test create user function', async () => {
 )
 
 test('Test get user function', async () => {
-    jest.setTimeout(30000)
     const expected: User = 
     {
         address: 'aura1xc67705clhg7ftfa0khmzq7z7kx87x7mrzlvuw',
