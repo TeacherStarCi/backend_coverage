@@ -6,10 +6,6 @@ jobs:
   build:
     docker:
       - image: cimg/node:current
-      - image: cimg/mysql:8.0
-        environment:
-          MYSQL_ROOT_PASSWORD: Cuong123_a
-          MYSQL_DATABASE: 3cdb
     steps:
       - checkout
       - run:
