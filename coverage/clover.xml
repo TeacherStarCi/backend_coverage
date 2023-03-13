@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1678702191930" clover="3.2.0">
-  <project timestamp="1678702191930" name="All files">
-    <metrics statements="321" coveredstatements="321" conditionals="70" coveredconditionals="70" methods="43" coveredmethods="43" elements="434" coveredelements="434" complexity="0" loc="321" ncloc="321" packages="3" files="9" classes="9"/>
+<coverage generated="1678710908337" clover="3.2.0">
+  <project timestamp="1678710908337" name="All files">
+    <metrics statements="358" coveredstatements="358" conditionals="82" coveredconditionals="82" methods="47" coveredmethods="47" elements="487" coveredelements="487" complexity="0" loc="358" ncloc="358" packages="3" files="10" classes="10"/>
     <package name="database">
       <metrics statements="141" coveredstatements="141" conditionals="9" coveredconditionals="9" methods="28" coveredmethods="28"/>
       <file name="deck.ts" path="C:\Users\tucuo\Desktop\GitRepo\backend_coverage\src\database\deck.ts">
@@ -70,10 +70,10 @@
         <line num="28" count="2" type="stmt"/>
         <line num="30" count="2" type="stmt"/>
         <line num="31" count="2" type="stmt"/>
-        <line num="32" count="276" type="stmt"/>
-        <line num="33" count="276" type="cond" truecount="4" falsecount="0"/>
-        <line num="34" count="6" type="stmt"/>
-        <line num="35" count="6" type="stmt"/>
+        <line num="32" count="284" type="stmt"/>
+        <line num="33" count="284" type="cond" truecount="4" falsecount="0"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="35" count="2" type="stmt"/>
         <line num="39" count="2" type="stmt"/>
         <line num="40" count="2" type="stmt"/>
       </file>
@@ -181,15 +181,15 @@
         <line num="12" count="2" type="stmt"/>
         <line num="15" count="3" type="stmt"/>
         <line num="16" count="3" type="stmt"/>
-        <line num="17" count="278" type="stmt"/>
-        <line num="18" count="278" type="stmt"/>
-        <line num="19" count="278" type="stmt"/>
-        <line num="20" count="278" type="cond" truecount="1" falsecount="0"/>
-        <line num="21" count="278" type="stmt"/>
-        <line num="22" count="278" type="stmt"/>
-        <line num="27" count="278" type="cond" truecount="1" falsecount="0"/>
-        <line num="28" count="45" type="stmt"/>
-        <line num="34" count="278" type="stmt"/>
+        <line num="17" count="286" type="stmt"/>
+        <line num="18" count="286" type="stmt"/>
+        <line num="19" count="286" type="stmt"/>
+        <line num="20" count="286" type="cond" truecount="1" falsecount="0"/>
+        <line num="21" count="286" type="stmt"/>
+        <line num="22" count="286" type="stmt"/>
+        <line num="27" count="286" type="cond" truecount="1" falsecount="0"/>
+        <line num="28" count="5" type="stmt"/>
+        <line num="34" count="286" type="stmt"/>
       </file>
       <file name="sha256.ts" path="C:\Users\tucuo\Desktop\GitRepo\backend_coverage\src\hash\sha256.ts">
         <metrics statements="9" coveredstatements="9" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
@@ -205,7 +205,47 @@
       </file>
     </package>
     <package name="service">
-      <metrics statements="149" coveredstatements="149" conditionals="57" coveredconditionals="57" methods="12" coveredmethods="12"/>
+      <metrics statements="186" coveredstatements="186" conditionals="69" coveredconditionals="69" methods="16" coveredmethods="16"/>
+      <file name="client.ts" path="C:\Users\tucuo\Desktop\GitRepo\backend_coverage\src\service\client.ts">
+        <metrics statements="37" coveredstatements="37" conditionals="12" coveredconditionals="12" methods="4" coveredmethods="4"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="11" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="19" count="2" type="stmt"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
+        <line num="23" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="24" count="2" type="stmt"/>
+        <line num="26" count="2" type="cond" truecount="5" falsecount="0"/>
+        <line num="31" count="2" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="35" count="2" type="stmt"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="40" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="2" type="stmt"/>
+        <line num="47" count="2" type="stmt"/>
+        <line num="48" count="2" type="cond" truecount="5" falsecount="0"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="56" count="2" type="stmt"/>
+        <line num="57" count="2" type="stmt"/>
+        <line num="58" count="2" type="stmt"/>
+        <line num="61" count="2" type="stmt"/>
+        <line num="63" count="2" type="stmt"/>
+      </file>
       <file name="game.ts" path="C:\Users\tucuo\Desktop\GitRepo\backend_coverage\src\service\game.ts">
         <metrics statements="149" coveredstatements="149" conditionals="57" coveredconditionals="57" methods="12" coveredmethods="12"/>
         <line num="3" count="1" type="stmt"/>

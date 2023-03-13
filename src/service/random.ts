@@ -69,7 +69,6 @@ export const getDecksFromContract
                                 cardValue: j,
                                 cardPosition: cardPosition
                             }
-
                         }
                         )
                         const deckWithTransactionHash: DeckWithTxHash = {
