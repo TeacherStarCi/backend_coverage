@@ -5,7 +5,7 @@ export type DecodedJwtToken =
         exp: number
     }
 
-export type VerifiedJwtToken = {
+export type VerifyToken = {
         token: string,
         available : boolean
     }
