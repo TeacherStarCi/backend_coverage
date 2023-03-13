@@ -3,7 +3,7 @@ import { jwtDecodeWithHashSecret, jwtSignWithHashSecret } from './jwt'
 describe('Jwt sign/verify tests', () => {
     test('To sign & verify with hash secret function test', () => {
         const address = 'aura1xc67705clhg7ftfa0khmzq7z7kx87x7mrzlvuw'
-        const expiredInSecond = 60
+        const expiredInSecond = 3600
         const token = jwtSignWithHashSecret(address, expiredInSecond)
         const rightDecodedToken: DecodedJwtToken | null  = jwtDecodeWithHashSecret(token)
         const wrongDecodedToken: DecodedJwtToken | null = jwtDecodeWithHashSecret('wrong token')

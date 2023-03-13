@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { jwtDecodeWithHashSecret } from '../hash/jwt'
+import { jwtDecodeWithHashSecret } from '../hash'
 import { DecodedJwtToken } from '../type'
 const prisma = new PrismaClient()
 export const addJwtToken =
@@ -23,16 +23,20 @@ export const getLastedJwtTokenMatchedAddress =
     async (address: string): Promise<string | null> => {
         let result = ''
         let tokens: {token: string}[] = []
+       
         await prisma.$connect()
         tokens = await prisma.jwt.findMany()
-        let lastedIat = 0
+      
+        let lastedExp = 0
         tokens.forEach(token => {
             const decode: DecodedJwtToken | null = jwtDecodeWithHashSecret(token.token)
-            if (decode != null && decode.address == address && decode.iat > lastedIat) {
+            console.log(decode)
+            if (decode != null && decode.address == address && decode.exp > lastedExp) {
                 result = token.token
-                lastedIat = decode.iat
+                lastedExp = decode.exp
             }
-        })
+        }
+        )
         await prisma.$disconnect()
         return result
     }

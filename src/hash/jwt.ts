@@ -13,7 +13,7 @@ export const jwtSignWithHashSecret =
   }
 
 export const jwtDecodeWithHashSecret =
-  (token: string) => {
+  (token: string): DecodedJwtToken | null => {
       let result: DecodedJwtToken | null = null
       let verifiedResult: JwtPayload | string = ''
       const hashSecret: string | undefined = process.env.HASH_SECRET
