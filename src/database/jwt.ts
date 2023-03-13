@@ -30,7 +30,6 @@ export const getLastedJwtTokenMatchedAddress =
         let lastedExp = 0
         tokens.forEach(token => {
             const decode: DecodedJwtToken | null = jwtDecodeWithHashSecret(token.token)
-            console.log(decode)
             if (decode != null && decode.address == address && decode.exp > lastedExp) {
                 result = token.token
                 lastedExp = decode.exp

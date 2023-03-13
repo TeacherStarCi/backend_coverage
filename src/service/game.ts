@@ -56,8 +56,7 @@ export const getCardFromIndex = (index: number): Card | null => {
     }
     return result
 }
-
-const getCardNameIndex = (cardName: CardNameValue): number => {
+export const getCardNameIndex = (cardName: CardNameValue): number => {
     let result = -1
     switch (cardName) {
     case 'Ace': result = 1
@@ -69,39 +68,6 @@ const getCardNameIndex = (cardName: CardNameValue): number => {
     case 'King': result = 13
         break
     default: result = Number.parseInt(cardName)
-        break
-    }
-    return result
-}
-
-const getCardName = (index: number): CardNameValue | null => {
-    let result: CardNameValue | null = null
-    switch (index) {
-    case 1: result = 'Ace'
-        break
-    case 2: result = '2'
-        break
-    case 3: result = '3'
-        break
-    case 4: result = '4'
-        break
-    case 5: result = '5'
-        break
-    case 6: result = '6'
-        break
-    case 7: result = '7'
-        break
-    case 8: result = '8'
-        break
-    case 9: result = '9'
-        break
-    case 10: result = '10'
-        break
-    case 11: result = 'Jack'
-        break
-    case 12: result = 'Queen'
-        break
-    case 13: result = 'King'
         break
     }
     return result
@@ -188,22 +154,20 @@ export const getHandState = (cards: Card[]): HandState | null => {
     }
     return result
 }
-
 export const getValueableCardRank = (card: Card): number => {
     let result = -1
     switch (card.suit) {
     case 'Spades': result = getCardNameIndex(card.cardName)
         break
-    case 'Clubs': result = 14 + getCardNameIndex(card.cardName)
+    case 'Clubs': result = 13 + getCardNameIndex(card.cardName)
         break
-    case 'Hearts': result = 28 + getCardNameIndex(card.cardName)
+    case 'Hearts': result = 26 + getCardNameIndex(card.cardName)
         break
-    case 'Diamonds': result = 42 + getCardNameIndex(card.cardName)
+    case 'Diamonds': result = 39 + getCardNameIndex(card.cardName)
         break
     }
     return result
 }
-
 export const getMostValueableCardRank = (cards: Card[]): number => {
     let result = -1
     if (cards.length == 3) {
@@ -215,7 +179,6 @@ export const getMostValueableCardRank = (cards: Card[]): number => {
     }
     return result
 }
-
 export const getHandRank = (cards: Card[]): number => {
     let result = -1
     const handState: HandState | null = getHandState(cards)
@@ -238,14 +201,13 @@ export const getHandRank = (cards: Card[]): number => {
     }
     return result
 }
-
 export const getCardedDecks = (decksWithTransactionHash: DecksWithTxHash): CardedDecksWithTxHash => {
     const results: CardedDecksWithTxHash = []
     if (decksWithTransactionHash.length > 0) {
         for (const deckWithTransactionHash of decksWithTransactionHash) {
 
             const indexedDeck: CardPosition[] = deckWithTransactionHash.deck
-            const cardedDeck: (Card | null)[] = indexedDeck.map(card => getCardFromIndex(card.cardPosition))
+            const cardedDeck: (Card | null)[] = indexedDeck.map(card => getCardFromIndex(card.cardValue))
             const modifiedCardedDeck: Card[] = []
 
             cardedDeck.forEach(card => {
