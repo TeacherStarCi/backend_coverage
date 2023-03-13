@@ -1,4 +1,4 @@
-import { Card, CardedDecksWithTxHash, DecksWithTxHash, DeckWithTxHash, HandState } from '../type'
+import { Card, CardedDecksWithTxHash, DecksWithTxHash } from '../type'
 import { getCardFromIndex, getCardLevel, getCardedDecks, getCardNameIndex, getHandRank, getHandState, getValueableCardRank } from './game'
 describe('Game services tests', () => {
     test('To get card from index function test', () => {

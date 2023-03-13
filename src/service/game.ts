@@ -229,10 +229,3 @@ export const getCardedDecks = (decksWithTransactionHash: DecksWithTxHash): Carde
     }
     return results
 }
-
-const testSmell = () => {
-    const fruits = ['Apple', 'Grape', 'Peach', 'Orange']
-    for (let i = 0; i < 4; i++ ){
-        console.log(fruits[i])
-    }
-}
