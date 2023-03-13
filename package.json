@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/TeacherStarCi/backend_coverage#readme",
   "dependencies": {
+    "@cosmjs/cosmwasm-stargate": "^0.30.0",
     "@prisma/client": "^4.11.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
