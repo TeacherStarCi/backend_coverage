@@ -106,65 +106,85 @@ const getCardName = (index: number): CardNameValue | null => {
     }
     return result
 }
+export const getCardLevel = (cardName: CardNameValue): number => {
+    let result = -1
+    switch (cardName) {
+    case 'Jack': result = 10
+        break
+    case 'Queen': result = 10
+        break
+    case 'King': result = 10
+        break
+    case 'Ace': result = 1
+        break
+    default: result = Number.parseInt(cardName)
+        break
+    }
 
+    return result
+}
 export const getHandState = (cards: Card[]): HandState | null => {
     let result: HandState | null = null
     if (cards.length == 3) {
         if (cards[0].cardName == cards[1].cardName
             && cards[1].cardName == cards[2].cardName) {
-            result = { state: 'ThreeOfAKind', value: getCardNameIndex(cards[0].cardName) }
-        } else {
-            const minCardNameIndex: number = Math.min(
-                getCardNameIndex(cards[0].cardName),
-                getCardNameIndex(cards[1].cardName),
-                getCardNameIndex(cards[2].cardName),
-            )
-            const maxCardNameIndex: number = Math.max(
-                getCardNameIndex(cards[0].cardName),
-                getCardNameIndex(cards[1].cardName),
-                getCardNameIndex(cards[2].cardName),
-            )
-
-            const cardNameIndexSet: number[] = [
-                getCardNameIndex(cards[0].cardName),
-                getCardNameIndex(cards[1].cardName),
-                getCardNameIndex(cards[2].cardName)
-            ]
-
-            const maxCardNameIndexPos: number = cardNameIndexSet.findIndex(
-                cardNameIndex => cardNameIndex == maxCardNameIndex)
-
-            const minCardNameIndexPos: number = cardNameIndexSet.findIndex(
-                cardNameIndex => cardNameIndex == minCardNameIndex)
-
-            if (maxCardNameIndexPos > minCardNameIndexPos) {
-                cardNameIndexSet.splice(maxCardNameIndexPos, 1)
-                cardNameIndexSet.splice(minCardNameIndexPos, 1)
-            } else {
-                cardNameIndexSet.splice(minCardNameIndexPos, 1)
-                cardNameIndexSet.splice(maxCardNameIndexPos, 1)
+            result = {
+                state: 'ThreeOfAKind',
+                value: getCardNameIndex(cards[0].cardName)
             }
-
-            const medCardNameIndex: number = cardNameIndexSet[0]
-
-            if (maxCardNameIndex - medCardNameIndex == 1
-                && medCardNameIndex - minCardNameIndex == 1) {
-                result = { state: 'Flush', begin: minCardNameIndex }
-            } else if (medCardNameIndex == 12 && minCardNameIndex == 1) {
-                result = { state: 'Flush', begin: medCardNameIndex }
-            } else {
-                if (minCardNameIndex >= 11) {
-                    result = { state: 'ThreeFaceCards' }
-                } else {
-                    const level: number = (getCardLevel(cards[0].cardName)
-                        + getCardLevel(cards[1].cardName)
-                        + getCardLevel(cards[2].cardName)) % 10
-                    result = { state: 'Base', level: level }
-                }
-            }
-
-
+            return result
         }
+        const minCardNameIndex: number = Math.min(
+            getCardNameIndex(cards[0].cardName),
+            getCardNameIndex(cards[1].cardName),
+            getCardNameIndex(cards[2].cardName),
+        )
+        const maxCardNameIndex: number = Math.max(
+            getCardNameIndex(cards[0].cardName),
+            getCardNameIndex(cards[1].cardName),
+            getCardNameIndex(cards[2].cardName),
+        )
+
+        const cardNameIndexSet: number[] = [
+            getCardNameIndex(cards[0].cardName),
+            getCardNameIndex(cards[1].cardName),
+            getCardNameIndex(cards[2].cardName)
+        ]
+
+        const maxCardNameIndexPos: number = cardNameIndexSet.findIndex(
+            cardNameIndex => cardNameIndex == maxCardNameIndex)
+
+        const minCardNameIndexPos: number = cardNameIndexSet.findIndex(
+            cardNameIndex => cardNameIndex == minCardNameIndex)
+
+        if (maxCardNameIndexPos > minCardNameIndexPos) {
+            cardNameIndexSet.splice(maxCardNameIndexPos, 1)
+            cardNameIndexSet.splice(minCardNameIndexPos, 1)
+        } else {
+            cardNameIndexSet.splice(minCardNameIndexPos, 1)
+            cardNameIndexSet.splice(maxCardNameIndexPos, 1)
+        }
+
+        const medCardNameIndex: number = cardNameIndexSet[0]
+
+        if (maxCardNameIndex - medCardNameIndex == 1
+            && medCardNameIndex - minCardNameIndex == 1) {
+            result = { state: 'Flush', begin: minCardNameIndex }
+            return result
+        }
+        if (medCardNameIndex == 12 && minCardNameIndex == 1) {
+            result = { state: 'Flush', begin: medCardNameIndex }
+            return result
+        }
+        if (minCardNameIndex >= 11) {
+            result = { state: 'ThreeFaceCards' }
+            return result
+        }
+        const level: number = (getCardLevel(cards[0].cardName)
+            + getCardLevel(cards[1].cardName)
+            + getCardLevel(cards[2].cardName)) % 10
+        result = { state: 'Base', level: level }
+
     }
     return result
 }
@@ -196,24 +216,6 @@ export const getMostValueableCardRank = (cards: Card[]): number => {
     return result
 }
 
-export const getCardLevel = (cardName: CardNameValue): number => {
-    let result = -1
-    switch (cardName) {
-    case 'Jack': result = 10
-        break
-    case 'Queen': result = 10
-        break
-    case 'King': result = 10
-        break
-    case 'Ace': result = 1
-        break
-    default: result = Number.parseInt(cardName)
-        break
-    }
-
-    return result
-}
-
 export const getHandRank = (cards: Card[]): number => {
     let result = -1
     const handState: HandState | null = getHandState(cards)
@@ -242,7 +244,7 @@ export const getCardedDecks = (decksWithTransactionHash: DecksWithTxHash): Carde
     if (decksWithTransactionHash.length > 0) {
         for (const deckWithTransactionHash of decksWithTransactionHash) {
 
-            const indexedDeck: CardPosition[] =  deckWithTransactionHash.deck
+            const indexedDeck: CardPosition[] = deckWithTransactionHash.deck
             const cardedDeck: (Card | null)[] = indexedDeck.map(card => getCardFromIndex(card.cardPosition))
             const modifiedCardedDeck: Card[] = []
 
