@@ -45,32 +45,32 @@ export const authEndpoint = (app: Application) => {
                 // memo
                 const memo: string = fetchRequestBody.tx.body.memo
                 // handle db
-                if (await checkVerifyToken(memo)) {
-                    await setVerifyAvailable(memo, false)
-                    const transaction: Transaction = {
-                        txHash: txHash,
-                        sender: sender,
-                        receiver: receiver,
-                        result: result,
-                        amount: amount,
-                        fee: fee,
-                        height: height,
-                        time: time
-                    }
-
-                    await addTransaction(transaction)
-                    if (result) {
-                        const user: User | null = await getUser(sender)
-                        if (user != null) {
-                            user.asset += amount
-                            await updateUser(user)
-                            responseBody = { status: true, user: user }
-                        }
-                    } else {
-                        responseBody = { status: false, error: 'Transaction result is false' }
-                    }
-                } else {
+                if (!await checkVerifyToken(memo)) {
                     responseBody = { status: false, error: 'Token is invalidated' }
+                    throw new Error()
+                }
+                await setVerifyAvailable(memo, false)
+                const transaction: Transaction = {
+                    txHash: txHash,
+                    sender: sender,
+                    receiver: receiver,
+                    result: result,
+                    amount: amount,
+                    fee: fee,
+                    height: height,
+                    time: time
+                }
+
+                await addTransaction(transaction)
+                if (!result) {
+                    responseBody = { status: false, error: 'Transaction result is false' }
+                    throw new Error()
+                }
+                const user: User | null = await getUser(sender)
+                if (user != null) {
+                    user.asset += amount
+                    await updateUser(user)
+                    responseBody = { status: true, user: user }
                 }
             }
         }
