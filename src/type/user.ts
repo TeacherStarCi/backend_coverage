@@ -16,3 +16,14 @@ export type User = {
     deposits?: Transaction[],
     withdraws?: Transaction[]
 }
+
+
+export type SocketUser = {
+    socketId: string, 
+    user: User,
+    position: Position
+}
+export type Position = {
+    location: 'waitingRoom' | 'gameRoom',
+    state?: 'indie' | 'inProgress' 
+}

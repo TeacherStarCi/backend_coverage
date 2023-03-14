@@ -1,5 +1,5 @@
 import { User } from '../type'
-import { createUser, getUser, updateUser } from './user'
+import { addUser, getUser, getUserWithTransaction, updateUser } from './user'
 
 describe('User model tests', () => {
     const sample: User =
@@ -14,12 +14,13 @@ describe('User model tests', () => {
         username: 'VuNT',
         asset: 69
     }
+    // const expectedWithTransaction: User
     test('To create user function test', async () => {
 
         // success
-        expect(await createUser(sample)).toBeTruthy()
+        expect(await addUser(sample)).toBeTruthy()
         // fail, due to primary key confliction
-        expect(await createUser(sample)).toBeFalsy()
+        expect(await addUser(sample)).toBeFalsy()
     }
     )
     test('To get user function test', async () => {
@@ -36,6 +37,13 @@ describe('User model tests', () => {
         // create
         expect(await updateUser(sample)).toBeUndefined()
         // create
+    }
+    )
+    test('To get user with transactions function test', async () => {
+        // success
+        expect((await getUserWithTransaction('aura1xc67705clhg7ftfa0khmzq7z7kx87x7mrzlvuw'))?.withdraws?.length).toBeGreaterThan(0)
+        // fail, due to primary key confliction
+        expect(await getUserWithTransaction('wrong address')).toBeNull()
     }
     )
 }

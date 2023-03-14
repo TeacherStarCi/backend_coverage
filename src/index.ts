@@ -1,6 +1,4 @@
 import { Application } from 'express'
-import {App, authEndpoint} from './endpoint'
+import {App} from './endpoint'
 
 const app: Application = new App().app
-
-authEndpoint(app)

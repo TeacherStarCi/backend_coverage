@@ -9,7 +9,7 @@ import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
 import { SigningStargateClient, Coin, StdFee } from '@cosmjs/stargate'
 import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate'
 
-export const authEndpoint = (app: Application) => {
+export const transactionEndpoint = (app: Application) => {
     app.post('/get-verify-token', async (response: Response) => {
         let responseBody: { status: true, token: string } | { status: false, error: string } =
             { status: false, error: '' }
@@ -60,7 +60,6 @@ export const authEndpoint = (app: Application) => {
                     height: height,
                     time: time
                 }
-
                 await addTransaction(transaction)
                 if (!result) {
                     responseBody = { status: false, error: 'Transaction result is false' }
@@ -148,7 +147,7 @@ export const authEndpoint = (app: Application) => {
                     await addTransaction(transaction)
                     const user: User | null = await getUser(receiver)
                     if (user != null) {
-                        user.asset -= amount
+                        user.asset -= requestAmount
                         await updateUser(user)
                         responseBody = { status: true, user: user }
                     }
