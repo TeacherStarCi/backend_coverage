@@ -85,74 +85,73 @@ export const authEndpoint = (app: Application) => {
         try {
             const requestBody: { address: string, amount: number } = request.body
             const address = requestBody.address
-            const amount = requestBody.amount
+            const requestAmount = requestBody.amount
             const currentUser: User | null = await getUser(address)
             if (currentUser != null) {
-                if (currentUser.asset < amount) {
-                    const stargateWalletAndClinet: StargateWalletAndClient = await getStargateWalletAndClient()
-                    const lcdEndpontTxHash: string | undefined = process.env.LCD_ENDPOINT_TXHASH
-                    const denom: string | undefined = process.env.DENOM
-                    if (typeof stargateWalletAndClinet.wallet != 'undefined' &&
-                        typeof stargateWalletAndClinet.client != 'undefined' &&
-                        typeof lcdEndpontTxHash != 'undefined' &&
-                        typeof denom != 'undefined') {
-                        const wallet: DirectSecp256k1HdWallet = stargateWalletAndClinet.wallet
-                        const client: SigningStargateClient = stargateWalletAndClinet.client
-                        const serverAddress = (await wallet.getAccounts())[0].address
-                        const serverBalance: Coin = await client.getBalance(address, denom)
-                        const serverBalanceValue = Number.parseInt(serverBalance.amount) * exponent
-                        if (serverBalanceValue > amount + 1) {
-                            // ensure that server always have money
-                            const sendAmount: Coin[] = [
-                                {
-                                    denom: denom,
-                                    amount: (serverBalanceValue * inverseExponent).toString()
-                                }
-                            ]
-                            const sendFee: StdFee = {
-                                amount: [{ denom: denom, amount: '200' }],
-                                gas: '200000'
-                            }
-                            const withdrawResult: DeliverTxResponse = await client.sendTokens(
-                                serverAddress,
-                                address,
-                                sendAmount,
-                                sendFee
-                            )
-                            const txHash = withdrawResult.transactionHash
-                            //query to get result
-                            const fetchRequestBody = await (await fetch(lcdEndpontTxHash + txHash)).json()
-                            const sender: string = fetchRequestBody.tx.body.messages[0].from_address
-                            const receiver: string = fetchRequestBody.tx.body.messages[0].to_address
-                            const result: boolean = fetchRequestBody.tx_response.code == 0
-                            const amount: number = Number.parseInt(fetchRequestBody.tx.body.messages[0].amount[0].amount) * exponent
-                            const fee: number = Number.parseInt(fetchRequestBody.tx.auth_info.fee.amount[0].amount) * exponent
-                            const height: number = Number.parseInt(fetchRequestBody.tx_response.height)
-                            const time: Date = new Date(fetchRequestBody.tx_response.timestamp)
-                            const transaction: Transaction = {
-                                txHash: txHash,
-                                sender: sender,
-                                receiver: receiver,
-                                result: result,
-                                amount: amount,
-                                fee: fee,
-                                height: height,
-                                time: time
-                            }
-                            await addTransaction(transaction)
-                            const user: User | null = await getUser(receiver)
-                            if (user != null) {
-                                user.asset -= amount
-                                await updateUser(user)
-                                responseBody = { status: true, user: user }
-                            }
-
-                        } else {
-                            responseBody = { status: false, error: 'Server does not have enough money' }
-                        }
-                    }
-                } else {
+                if (currentUser.asset < requestAmount) {
                     responseBody = { status: false, error: 'Asset does not have enough money' }
+                    throw new Error()
+                }
+                const stargateWalletAndClinet: StargateWalletAndClient = await getStargateWalletAndClient()
+                const lcdEndpontTxHash: string | undefined = process.env.LCD_ENDPOINT_TXHASH
+                const denom: string | undefined = process.env.DENOM
+                if (typeof stargateWalletAndClinet.wallet != 'undefined' &&
+                    typeof stargateWalletAndClinet.client != 'undefined' &&
+                    typeof lcdEndpontTxHash != 'undefined' &&
+                    typeof denom != 'undefined') {
+                    const wallet: DirectSecp256k1HdWallet = stargateWalletAndClinet.wallet
+                    const client: SigningStargateClient = stargateWalletAndClinet.client
+                    const serverAddress = (await wallet.getAccounts())[0].address
+                    const serverBalance: Coin = await client.getBalance(address, denom)
+                    const serverBalanceValue = Number.parseInt(serverBalance.amount) * exponent
+                    if (serverBalanceValue < requestAmount + 1) {
+                        // ensure that server always have money
+                        responseBody = { status: false, error: 'Server does not have enough money' }
+                        throw new Error()
+                    }
+                    const sendAmount: Coin[] = [
+                        {
+                            denom: denom,
+                            amount: (requestAmount * inverseExponent).toString()
+                        }
+                    ]
+                    const sendFee: StdFee = {
+                        amount: [{ denom: denom, amount: '200' }],
+                        gas: '200000'
+                    }
+                    const withdrawResult: DeliverTxResponse = await client.sendTokens(
+                        serverAddress,
+                        address,
+                        sendAmount,
+                        sendFee
+                    )
+                    const txHash = withdrawResult.transactionHash
+                    //query to get result
+                    const fetchRequestBody = await (await fetch(lcdEndpontTxHash + txHash)).json()
+                    const sender: string = fetchRequestBody.tx.body.messages[0].from_address
+                    const receiver: string = fetchRequestBody.tx.body.messages[0].to_address
+                    const result: boolean = fetchRequestBody.tx_response.code == 0
+                    const amount: number = Number.parseInt(fetchRequestBody.tx.body.messages[0].amount[0].amount) * exponent
+                    const fee: number = Number.parseInt(fetchRequestBody.tx.auth_info.fee.amount[0].amount) * exponent
+                    const height: number = Number.parseInt(fetchRequestBody.tx_response.height)
+                    const time: Date = new Date(fetchRequestBody.tx_response.timestamp)
+                    const transaction: Transaction = {
+                        txHash: txHash,
+                        sender: sender,
+                        receiver: receiver,
+                        result: result,
+                        amount: amount,
+                        fee: fee,
+                        height: height,
+                        time: time
+                    }
+                    await addTransaction(transaction)
+                    const user: User | null = await getUser(receiver)
+                    if (user != null) {
+                        user.asset -= amount
+                        await updateUser(user)
+                        responseBody = { status: true, user: user }
+                    }
                 }
             }
         } finally {
