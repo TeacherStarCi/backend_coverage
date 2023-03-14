@@ -80,22 +80,17 @@ export const setAsset =
                 await updateUser(winner)
             }
             const losers: User[] = []
-            if (loserAddresses.length > 0) {
-                for (const loserAddress of loserAddresses) {
-                    const loser: User | null = await getUser(loserAddress)
-                    if (loser != null) {
-                        losers.push(loser)
-                    }
-
+            for (const loserAddress of loserAddresses) {
+                const loser: User | null = await getUser(loserAddress)
+                if (loser != null) {
+                    losers.push(loser)
                 }
             }
-            if (losers.length > 0) {
-                for (const loser of losers) {
-                    loser.asset -= betAmount
-                    await updateUser(loser)
-                }
-
+            for (const loser of losers) {
+                loser.asset -= betAmount
+                await updateUser(loser)
             }
+
         }
         return result
     } 
