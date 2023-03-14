@@ -34,18 +34,14 @@ export const setAllPlayersHandsWhenStart =
                     }
                 }
             }
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            roomSet[roomIndex].players[playerIndexHasMaxRank].hand!.isWinner = true
+            roomSet[roomIndex].players[playerIndexHasMaxRank].hand.isWinner = true
         }
         return playerIndexHasMaxRank
     }
-
 export const setAllPlayersHandsWhenTerminate
     = (code: string, roomSet: RoomSet): void => {
-
         const roomIndex: number = getRoomIndexFromCode(code, roomSet)
         const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
-
         if (roomIndex != -1 && numberOfPlayers != -1) {
             if (numberOfPlayers > 0) {
                 for (let i = 0; i < numberOfPlayers; i++) {
@@ -54,19 +50,19 @@ export const setAllPlayersHandsWhenTerminate
             }
         }
     }
-
 export const setAsset =
     async (code: string, roomSet: RoomSet, betAmount: number, winnerPosition: number): Promise<boolean> => {
         const result = false
         const roomIndex: number = getRoomIndexFromCode(code, roomSet)
         const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
+        const rewardRatio: number = 0.9 * (numberOfPlayers - 1)
         if (roomIndex != -1
             && numberOfPlayers > 0
             && winnerPosition >= 0
             && winnerPosition < numberOfPlayers
             && betAmount >= 0) {
             const winnerAddress: string = roomSet[roomIndex].players[winnerPosition].socketUser.user.address
-            roomSet[roomIndex].players[winnerPosition].socketUser.user.asset += 2.7 * betAmount
+            roomSet[roomIndex].players[winnerPosition].socketUser.user.asset += rewardRatio * betAmount
             const loserAddresses: string[] = []
             for (let i = 0; i < numberOfPlayers; i++) {
                 if (i != winnerPosition) {
@@ -76,7 +72,7 @@ export const setAsset =
             }
             const winner: User | null = await getUser(winnerAddress)
             if (winner != null) {
-                winner.asset += (0.9 * (numberOfPlayers - 1)) * betAmount
+                winner.asset += rewardRatio * betAmount
                 await updateUser(winner)
             }
             const losers: User[] = []
@@ -90,7 +86,6 @@ export const setAsset =
                 loser.asset -= betAmount
                 await updateUser(loser)
             }
-
         }
         return result
     } 
