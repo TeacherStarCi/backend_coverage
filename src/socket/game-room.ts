@@ -11,14 +11,12 @@ export const gameRoomSocket = (io: Server, socket: Socket,
         if (deckStorage.length == 0) {
             // the storage is empty
             txHash = await getDecksFromContract()
-            console.log(txHash)
             deckStorage = await getDecks(txHash)
-        } else {
-            txHash = deckStorage[0].txHash
         }
+        //  else {
+        //     txHash = deckStorage[0].txHash
+        // }
         const gameDeck: DeckWithTxHash | undefined = deckStorage.pop()
-        console.log(gameDeck?.deck)
-        // console.log(deckStorage);
         if (typeof gameDeck != 'undefined') {
             const winnerPosition: number = setAllPlayersHandsWhenStart(code, roomSet, gameDeck)
             setSocketUserPositionInRoom(code, roomSet, 'start')
