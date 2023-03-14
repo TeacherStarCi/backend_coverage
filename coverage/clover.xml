@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1678710908337" clover="3.2.0">
-  <project timestamp="1678710908337" name="All files">
-    <metrics statements="358" coveredstatements="358" conditionals="82" coveredconditionals="82" methods="47" coveredmethods="47" elements="487" coveredelements="487" complexity="0" loc="358" ncloc="358" packages="3" files="10" classes="10"/>
+<coverage generated="1678764967463" clover="3.2.0">
+  <project timestamp="1678764967463" name="All files">
+    <metrics statements="362" coveredstatements="362" conditionals="82" coveredconditionals="82" methods="49" coveredmethods="49" elements="493" coveredelements="493" complexity="0" loc="362" ncloc="362" packages="3" files="10" classes="10"/>
     <package name="database">
-      <metrics statements="141" coveredstatements="141" conditionals="9" coveredconditionals="9" methods="28" coveredmethods="28"/>
+      <metrics statements="145" coveredstatements="145" conditionals="9" coveredconditionals="9" methods="30" coveredmethods="30"/>
       <file name="deck.ts" path="C:\Users\tucuo\Desktop\GitRepo\backend_coverage\src\database\deck.ts">
         <metrics statements="40" coveredstatements="40" conditionals="3" coveredconditionals="3" methods="7" coveredmethods="7"/>
         <line num="1" count="1" type="stmt"/>
@@ -70,10 +70,10 @@
         <line num="28" count="2" type="stmt"/>
         <line num="30" count="2" type="stmt"/>
         <line num="31" count="2" type="stmt"/>
-        <line num="32" count="284" type="stmt"/>
-        <line num="33" count="284" type="cond" truecount="4" falsecount="0"/>
-        <line num="34" count="2" type="stmt"/>
-        <line num="35" count="2" type="stmt"/>
+        <line num="32" count="340" type="stmt"/>
+        <line num="33" count="340" type="cond" truecount="4" falsecount="0"/>
+        <line num="34" count="5" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
         <line num="39" count="2" type="stmt"/>
         <line num="40" count="2" type="stmt"/>
       </file>
@@ -107,7 +107,7 @@
         <line num="59" count="2" type="stmt"/>
       </file>
       <file name="user.ts" path="C:\Users\tucuo\Desktop\GitRepo\backend_coverage\src\database\user.ts">
-        <metrics statements="17" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+        <metrics statements="21" coveredstatements="21" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
         <line num="6" count="2" type="stmt"/>
@@ -125,6 +125,10 @@
         <line num="29" count="2" type="stmt"/>
         <line num="36" count="2" type="stmt"/>
         <line num="37" count="2" type="stmt"/>
+        <line num="40" count="2" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
       </file>
       <file name="verify.ts" path="C:\Users\tucuo\Desktop\GitRepo\backend_coverage\src\database\verify.ts">
         <metrics statements="31" coveredstatements="31" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
@@ -181,15 +185,15 @@
         <line num="12" count="2" type="stmt"/>
         <line num="15" count="3" type="stmt"/>
         <line num="16" count="3" type="stmt"/>
-        <line num="17" count="286" type="stmt"/>
-        <line num="18" count="286" type="stmt"/>
-        <line num="19" count="286" type="stmt"/>
-        <line num="20" count="286" type="cond" truecount="1" falsecount="0"/>
-        <line num="21" count="286" type="stmt"/>
-        <line num="22" count="286" type="stmt"/>
-        <line num="27" count="286" type="cond" truecount="1" falsecount="0"/>
-        <line num="28" count="5" type="stmt"/>
-        <line num="34" count="286" type="stmt"/>
+        <line num="17" count="342" type="stmt"/>
+        <line num="18" count="342" type="stmt"/>
+        <line num="19" count="342" type="stmt"/>
+        <line num="20" count="342" type="cond" truecount="1" falsecount="0"/>
+        <line num="21" count="342" type="stmt"/>
+        <line num="22" count="342" type="stmt"/>
+        <line num="27" count="342" type="cond" truecount="1" falsecount="0"/>
+        <line num="28" count="27" type="stmt"/>
+        <line num="34" count="342" type="stmt"/>
       </file>
       <file name="sha256.ts" path="C:\Users\tucuo\Desktop\GitRepo\backend_coverage\src\hash\sha256.ts">
         <metrics statements="9" coveredstatements="9" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
@@ -295,8 +299,8 @@
         <line num="52" count="57" type="stmt"/>
         <line num="57" count="58" type="stmt"/>
         <line num="59" count="1" type="stmt"/>
-        <line num="60" count="83" type="stmt"/>
-        <line num="61" count="83" type="cond" truecount="5" falsecount="0"/>
+        <line num="60" count="86" type="stmt"/>
+        <line num="61" count="86" type="cond" truecount="5" falsecount="0"/>
         <line num="62" count="8" type="stmt"/>
         <line num="63" count="8" type="stmt"/>
         <line num="64" count="8" type="stmt"/>
@@ -305,9 +309,9 @@
         <line num="67" count="4" type="stmt"/>
         <line num="68" count="18" type="stmt"/>
         <line num="69" count="18" type="stmt"/>
-        <line num="70" count="45" type="stmt"/>
-        <line num="71" count="45" type="stmt"/>
-        <line num="73" count="83" type="stmt"/>
+        <line num="70" count="48" type="stmt"/>
+        <line num="71" count="48" type="stmt"/>
+        <line num="73" count="86" type="stmt"/>
         <line num="75" count="1" type="stmt"/>
         <line num="76" count="22" type="stmt"/>
         <line num="77" count="22" type="cond" truecount="5" falsecount="0"/>
@@ -354,22 +358,22 @@
         <line num="152" count="2" type="stmt"/>
         <line num="155" count="4" type="stmt"/>
         <line num="157" count="1" type="stmt"/>
-        <line num="158" count="13" type="stmt"/>
-        <line num="159" count="13" type="cond" truecount="4" falsecount="0"/>
+        <line num="158" count="16" type="stmt"/>
+        <line num="159" count="16" type="cond" truecount="4" falsecount="0"/>
         <line num="160" count="1" type="stmt"/>
         <line num="161" count="1" type="stmt"/>
         <line num="162" count="1" type="stmt"/>
         <line num="163" count="1" type="stmt"/>
         <line num="164" count="2" type="stmt"/>
         <line num="165" count="2" type="stmt"/>
-        <line num="166" count="9" type="stmt"/>
-        <line num="167" count="9" type="stmt"/>
-        <line num="169" count="13" type="stmt"/>
+        <line num="166" count="12" type="stmt"/>
+        <line num="167" count="12" type="stmt"/>
+        <line num="169" count="16" type="stmt"/>
         <line num="171" count="1" type="stmt"/>
-        <line num="172" count="3" type="stmt"/>
-        <line num="173" count="3" type="cond" truecount="1" falsecount="0"/>
-        <line num="174" count="3" type="stmt"/>
-        <line num="180" count="3" type="stmt"/>
+        <line num="172" count="5" type="stmt"/>
+        <line num="173" count="5" type="cond" truecount="1" falsecount="0"/>
+        <line num="174" count="4" type="stmt"/>
+        <line num="180" count="5" type="stmt"/>
         <line num="182" count="1" type="stmt"/>
         <line num="183" count="5" type="stmt"/>
         <line num="184" count="5" type="stmt"/>

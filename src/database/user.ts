@@ -23,8 +23,8 @@ export const createUser = async (user: User): Promise<boolean> => {
     return result
 }
 
-export const getUser = async (address: string): Promise<User|null> => {
-    let result: User|null = null
+export const getUser = async (address: string): Promise<User | null> => {
+    let result: User | null = null
     await prisma.$connect()
     result = await prisma.user.findUnique(
         {
@@ -37,3 +37,18 @@ export const getUser = async (address: string): Promise<User|null> => {
     return result
 }
 
+export const updateUser = async (user: User): Promise<void> => {
+    await prisma.$connect()
+    await prisma.user.update(
+        {
+            where: {
+                address: user.address
+            },
+            data: {
+                username: user.username,
+                asset: user.asset
+            }
+        }
+    )
+    await prisma.$disconnect()
+}

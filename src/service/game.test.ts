@@ -1,6 +1,137 @@
 import { Card, CardedDecksWithTxHash, DecksWithTxHash } from '../type'
-import { getCardFromIndex, getCardLevel, getCardedDecks, getCardNameIndex, getHandRank, getHandState, getValueableCardRank } from './game'
+import { getMostValueableCardRank, getCardFromIndex, getCardLevel, getCardedDecks, getCardNameIndex, getHandRank, getHandState, getValueableCardRank } from './game'
 describe('Game services tests', () => {
+    const baseResult: Card[] = [
+        {
+            cardName: '3',
+            suit: 'Diamonds'
+        }, {
+            cardName: '4',
+            suit: 'Diamonds'
+        }, {
+            cardName: '7',
+            suit: 'Diamonds'
+        }
+    ]
+    const threeFaceCardsResult: Card[] = [
+        {
+            cardName: 'Jack',
+            suit: 'Diamonds'
+        }, {
+            cardName: 'King',
+            suit: 'Diamonds'
+        }, {
+            cardName: 'King',
+            suit: 'Hearts'
+        }
+    ]
+    const flushResult: Card[] = [
+        {
+            cardName: '5',
+            suit: 'Diamonds'
+        }, {
+            cardName: '4',
+            suit: 'Diamonds'
+        }, {
+            cardName: '3',
+            suit: 'Diamonds'
+        }
+    ]
+    const specialFlushResult: Card[] = [
+        {
+            cardName: 'Queen',
+            suit: 'Diamonds'
+        }, {
+            cardName: 'Ace',
+            suit: 'Diamonds'
+        }, {
+            cardName: 'King',
+            suit: 'Diamonds'
+        }
+    ]
+    const threeOfAKindResult: Card[] = [
+        {
+            cardName: '3',
+            suit: 'Diamonds'
+        }, {
+            cardName: '3',
+            suit: 'Spades'
+        }, {
+            cardName: '3',
+            suit: 'Clubs'
+        }
+    ]
+    const wrongResult: Card[] = []
+    test('To get hand state function test', () => {
+
+        //base result
+        expect(getHandState(baseResult)).toEqual(
+            {
+                state: 'Base',
+                level: 4
+            }
+        )
+        //three face card result
+        expect(getHandState(threeFaceCardsResult)).toEqual(
+            {
+                state: 'ThreeFaceCards'
+            }
+        )
+        // flush result
+        expect(getHandState(flushResult)).toEqual(
+            {
+                state: 'Flush',
+                begin: 3
+            }
+        )
+        expect(getHandState(specialFlushResult)).toEqual(
+            {
+                state: 'Flush',
+                begin: 12
+            }
+        )
+        // three of a kind
+        expect(getHandState(threeOfAKindResult)).toEqual(
+            {
+                state: 'ThreeOfAKind',
+                value: 3
+            }
+        )
+
+        expect(getHandState(wrongResult)).toBeNull()
+    }
+    )
+    test('To get hand rank function test', () => {
+        //base hand
+        expect(getHandRank(baseResult)).toBe(446)
+        //three face cards
+        expect(getHandRank(threeFaceCardsResult)).toBe(1052)
+        //flush
+        expect(getHandRank(flushResult)).toBe(1344)
+        //three of a kind 
+        expect(getHandRank(threeOfAKindResult)).toBe(10003)
+        //wrong 
+        expect(getHandRank(wrongResult)).toBe(-1)
+    }
+    )
+    test('To get most valueable card rank function test', () => {
+        //test base case
+        expect(getMostValueableCardRank(baseResult)).toEqual(46)
+        // test wrong case
+        expect(getMostValueableCardRank(wrongResult)).toEqual(-1)
+    }
+    )
+    test('To get valuable card rank function test', () => {
+        //suit spades
+        expect(getValueableCardRank({ cardName: 'Ace', suit: 'Spades' })).toBe(1)
+        //suit clubs
+        expect(getValueableCardRank({ cardName: 'Ace', suit: 'Clubs' })).toBe(14)
+        //suit hearts
+        expect(getValueableCardRank({ cardName: 'Ace', suit: 'Hearts' })).toBe(27)
+        //suit diamonds
+        expect(getValueableCardRank({ cardName: 'Ace', suit: 'Diamonds' })).toBe(40)
+    }
+    )
     test('To get card from index function test', () => {
         const card: Card = {
             cardName: 'Ace',
@@ -27,7 +158,8 @@ describe('Game services tests', () => {
         expect(getCardNameIndex('Ace')).toBe(1)
         // others
         expect(getCardNameIndex('7')).toBe(7)
-    })
+    }
+    )
     test('To get card level function test', () => {
         // test with each card level
         expect(getCardLevel('Ace')).toBe(1)
@@ -106,136 +238,6 @@ describe('Game services tests', () => {
             }
         ]
         expect(getCardedDecks(decks)).toEqual(cardedDecks)
-    }
-    )
-    const baseResult: Card[] = [
-        {
-            cardName: '3',
-            suit: 'Diamonds'
-        }, {
-            cardName: '4',
-            suit: 'Diamonds'
-        }, {
-            cardName: '7',
-            suit: 'Diamonds'
-        }
-    ]
-
-    const threeFaceCardsResult: Card[] = [
-        {
-            cardName: 'Jack',
-            suit: 'Diamonds'
-        }, {
-            cardName: 'King',
-            suit: 'Diamonds'
-        }, {
-            cardName: 'King',
-            suit: 'Hearts'
-        }
-    ]
-
-    const flushResult: Card[] = [
-        {
-            cardName: '5',
-            suit: 'Diamonds'
-        }, {
-            cardName: '4',
-            suit: 'Diamonds'
-        }, {
-            cardName: '3',
-            suit: 'Diamonds'
-        }
-    ]
-    const specialFlushResult: Card[] = [
-        {
-            cardName: 'Queen',
-            suit: 'Diamonds'
-        }, {
-            cardName: 'Ace',
-            suit: 'Diamonds'
-        }, {
-            cardName: 'King',
-            suit: 'Diamonds'
-        }
-    ]
-
-    const threeOfAKindResult: Card[] = [
-        {
-            cardName: '3',
-            suit: 'Diamonds'
-        }, {
-            cardName: '3',
-            suit: 'Spades'
-        }, {
-            cardName: '3',
-            suit: 'Clubs'
-        }
-    ]
-
-    const wrongResult: Card[] = []
-    test('To get hand state function test', () => {
-
-        //base result
-        expect(getHandState(baseResult)).toEqual(
-            {
-                state: 'Base',
-                level: 4
-            }
-        )
-        //three face card result
-        expect(getHandState(threeFaceCardsResult)).toEqual(
-            {
-                state: 'ThreeFaceCards'
-            }
-        )
-        // flush result
-        expect(getHandState(flushResult)).toEqual(
-            {
-                state: 'Flush',
-                begin: 3
-            }
-        )
-        expect(getHandState(specialFlushResult)).toEqual(
-            {
-                state: 'Flush',
-                begin: 12
-            }
-        )
-        // three of a kind
-        expect(getHandState(threeOfAKindResult)).toEqual(
-            {
-                state: 'ThreeOfAKind',
-                value: 3
-            }
-        )
-
-        expect(getHandState(wrongResult)).toBeNull()
-    }
-    )
-    test('To get hand rank function test', () => {
-        //base hand
-        expect(getHandRank(baseResult)).toBe(446)
-        //three face cards
-        expect(getHandRank(threeFaceCardsResult)).toBe(1052)
-        //flush
-        expect(getHandRank(flushResult)).toBe(1344)
-        //three of a kind 
-        expect(getHandRank(threeOfAKindResult)).toBe(10003)
-        //wrong 
-        expect(getHandRank(wrongResult)).toBe(-1)
-    }
-    )
-    test('To get valuable card rank function test', () => {
-        //suit spades
-        expect(getValueableCardRank({ cardName: 'Ace', suit: 'Spades' })).toBe(1)
-        //suit clubs
-        expect(getValueableCardRank({ cardName: 'Ace', suit: 'Clubs' })).toBe(14)
-        //suit hearts
-        expect(getValueableCardRank({ cardName: 'Ace', suit: 'Hearts' })).toBe(27)
-        //suit diamonds
-        expect(getValueableCardRank({ cardName: 'Ace', suit: 'Diamonds' })).toBe(40)
-
-
     }
     )
 }
