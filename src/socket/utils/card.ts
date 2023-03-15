@@ -25,14 +25,13 @@ export const setAllPlayersHandsWhenStart =
                 playerIndexHasMaxRank = i
             }
             const result: HandState | null = getHandState(cards)
-            if (result != null) {
-                const hand: Hand = {
-                    cards: cards,
-                    result: result,
-                    isWinner: false
-                }
-                roomSet[roomIndex].players[i].hand = hand
+            if (result == null) { return playerIndexHasMaxRank }
+            const hand: Hand = {
+                cards: cards,
+                result: result,
+                isWinner: false
             }
+            roomSet[roomIndex].players[i].hand = hand
         }
         roomSet[roomIndex].players[playerIndexHasMaxRank].hand.isWinner = true
         return playerIndexHasMaxRank
