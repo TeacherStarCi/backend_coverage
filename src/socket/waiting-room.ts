@@ -6,7 +6,7 @@ import { createNewRoom, createPlayer, getRoomFromCode } from './utils'
 export const waitingRoomSocket = (io: Server, socket: Socket, roomSet: RoomSet) => {
     socket.on('create new room request', async (code: string, betAmount: number, address: string) => {
         const user: User | null = await getUser(address)
-        const result: boolean = createNewRoom(code, betAmount, socket.id, roomSet)
+        const result: boolean = createNewRoom(code, betAmount, roomSet)
         switch (result) {
         case true:
             socket.join(code)
@@ -38,7 +38,6 @@ export const waitingRoomSocket = (io: Server, socket: Socket, roomSet: RoomSet) 
                 socket.emit('fail to join the room')
                 break
             }
-            console.log(getRoomFromCode(code, roomSet))
         }
     }
     )
