@@ -1,6 +1,7 @@
 import { RoomSet, Room, Position, Player, User, SocketUser } from '../../type'
 
-export const getPlayerCurrentRoom = (socketId: string, roomSet: RoomSet): Room | null => {
+export const getPlayerCurrentRoom = 
+(socketId: string, roomSet: RoomSet): Room | null => {
     let result: Room | null = null
     const resultWithUndefined: Room | undefined = roomSet.find(room =>
         typeof room.players.find(player =>
@@ -11,14 +12,16 @@ export const getPlayerCurrentRoom = (socketId: string, roomSet: RoomSet): Room |
     return result
 }
 
-export const getPlayerCurrentRoomIndex = (socketId: string, roomSet: RoomSet): number => {
+export const getPlayerCurrentRoomIndex = 
+(socketId: string, roomSet: RoomSet): number => {
     const result: number = roomSet.findIndex(room =>
         typeof room.players.find(player =>
             player.socketUser.socketId == socketId) != 'undefined')
     return result
 }
 
-export const getPlayerCurrentPositionInRoom = (socketId: string, roomSet: RoomSet): number => {
+export const getPlayerCurrentPositionInRoom = 
+(socketId: string, roomSet: RoomSet): number => {
     const currentRoom: Room | null = getPlayerCurrentRoom(socketId, roomSet)
     let result = -1
     if (currentRoom != null) {
@@ -28,7 +31,8 @@ export const getPlayerCurrentPositionInRoom = (socketId: string, roomSet: RoomSe
     return result
 }
 
-export const deletePlayerFromRoom = (socketId: string, roomSet: RoomSet): void => {
+export const deletePlayerFromRoom = 
+(socketId: string, roomSet: RoomSet): void => {
     const roomIndex: number = getPlayerCurrentRoomIndex(socketId, roomSet)
     const playerPosition: number = getPlayerCurrentPositionInRoom(socketId, roomSet)
     if (roomIndex != -1 && playerPosition != -1) {
@@ -38,7 +42,8 @@ export const deletePlayerFromRoom = (socketId: string, roomSet: RoomSet): void =
         }
     }
 }
-export const getRoomFromCode = (code: string, roomSet: RoomSet): Room | null => {
+export const getRoomFromCode = 
+(code: string, roomSet: RoomSet): Room | null => {
     let result: Room | null = null
     const resultWithUndefined: Room | undefined = roomSet.find(room => room.code == code)
     if (typeof resultWithUndefined != 'undefined') {
@@ -96,21 +101,22 @@ export const setSocketUserPositionWhenChangingRoom =
         }
     }
 
-export const getPlayer = (socketId: string, roomSet: RoomSet): Player|null => {
-    let result: Player|null = null
-    const roomIndex: number = getPlayerCurrentRoomIndex(socketId, roomSet)
-    const playerPosition: number = getPlayerCurrentPositionInRoom(socketId, roomSet)
-    if (roomIndex != -1 && playerPosition != -1){
-        result = roomSet[roomIndex].players[playerPosition]
+export const getPlayer =
+    (socketId: string, roomSet: RoomSet): Player | null => {
+        let result: Player | null = null
+        const roomIndex: number = getPlayerCurrentRoomIndex(socketId, roomSet)
+        const playerPosition: number = getPlayerCurrentPositionInRoom(socketId, roomSet)
+        if (roomIndex != -1 && playerPosition != -1) {
+            result = roomSet[roomIndex].players[playerPosition]
+        }
+        return result
     }
-    return result
-}
 
 export const createPlayer =
     (socketId: string, user: User, code: string, roomSet: RoomSet): boolean => {
         let result = true
         const roomIndex: number = getRoomIndexFromCode(code, roomSet)
-        if (roomIndex != -1){
+        if (roomIndex != -1) {
             const socketUser: SocketUser = {
                 socketId: socketId,
                 user: user,
@@ -120,7 +126,7 @@ export const createPlayer =
                 }
             }
             const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
-            if (numberOfPlayers == 4){
+            if (numberOfPlayers == 4) {
                 result = false
             } else {
                 const player: Player = {
@@ -156,44 +162,44 @@ export const setSocketUserPositionInRoom =
         }
     }
 
-export const createNewRoom = 
-(code: string, betAmount: number, socketId: string, roomSet: RoomSet): boolean => {
-    let result = true
-    const roomIndex: number = getRoomIndexFromCode(code, roomSet)
-    if (roomIndex != -1) {
-        result = false
-    } else {
-        const newRoom: Room = {
-            code: code,
-            betAmount: betAmount,
-            players: []
+export const createNewRoom =
+    (code: string, betAmount: number, socketId: string, roomSet: RoomSet): boolean => {
+        let result = true
+        const roomIndex: number = getRoomIndexFromCode(code, roomSet)
+        if (roomIndex != -1) {
+            result = false
+        } else {
+            const newRoom: Room = {
+                code: code,
+                betAmount: betAmount,
+                players: []
+            }
+            roomSet.push(newRoom)
         }
-        roomSet.push(newRoom)
+        return result
     }
-    return result
-}
 
-export const setPlayerRemain = 
-(socketId: string, roomSet: RoomSet, toStatus: boolean): void => {
-    const playerCurrentRoomIndex: number = getPlayerCurrentRoomIndex(socketId, roomSet)
-    const playerPosition: number = getPlayerCurrentPositionInRoom(socketId, roomSet)
-    if (playerCurrentRoomIndex != -1 && playerPosition != -1){
-        roomSet[playerCurrentRoomIndex].players[playerPosition].remain = toStatus
+export const setPlayerRemain =
+    (socketId: string, roomSet: RoomSet, toStatus: boolean): void => {
+        const playerCurrentRoomIndex: number = getPlayerCurrentRoomIndex(socketId, roomSet)
+        const playerPosition: number = getPlayerCurrentPositionInRoom(socketId, roomSet)
+        if (playerCurrentRoomIndex != -1 && playerPosition != -1) {
+            roomSet[playerCurrentRoomIndex].players[playerPosition].remain = toStatus
+        }
     }
-}
 
 export const deleteNotRemainPlayer =
-(code: string, roomSet: RoomSet) => {
-    const roomIndex: number = getRoomIndexFromCode(code, roomSet)
-    const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
-    if (roomIndex != -1 && numberOfPlayers != -1){
-        if (numberOfPlayers > 0){
-            for (let i = 0; i < numberOfPlayers; i++){
-                const socketId: string = roomSet[roomIndex].players[i].socketUser.socketId
-                if (!roomSet[roomIndex].players[i].remain){
-                    deletePlayerFromRoom(socketId, roomSet)
+    (code: string, roomSet: RoomSet) => {
+        const roomIndex: number = getRoomIndexFromCode(code, roomSet)
+        const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
+        if (roomIndex != -1 && numberOfPlayers != -1) {
+            if (numberOfPlayers > 0) {
+                for (let i = 0; i < numberOfPlayers; i++) {
+                    const socketId: string = roomSet[roomIndex].players[i].socketUser.socketId
+                    if (!roomSet[roomIndex].players[i].remain) {
+                        deletePlayerFromRoom(socketId, roomSet)
+                    }
                 }
             }
         }
     }
-}

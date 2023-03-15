@@ -2,13 +2,12 @@ import { getUser, updateUser } from '../../database'
 import { getCardFromIndex, getHandRank, getHandState } from '../../service/game'
 import { Card, DeckWithTxHash, Hand, HandState, RoomSet, User } from '../../type'
 import { getNumberOfPlayers, getRoomIndexFromCode } from './room'
-
 export const setAllPlayersHandsWhenStart =
     (code: string, roomSet: RoomSet, deck: DeckWithTxHash): number => {
+        let playerIndexHasMaxRank = -1
         const roomIndex: number = getRoomIndexFromCode(code, roomSet)
         const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
         let maxRank = -1
-        let playerIndexHasMaxRank = -1
         if (roomIndex != -1 && numberOfPlayers > 0) {
             for (let i = 0; i < numberOfPlayers; i++) {
                 const firstCard: Card | null = getCardFromIndex(deck.deck[3 * i].cardPosition)
@@ -52,40 +51,42 @@ export const setAllPlayersHandsWhenTerminate
     }
 export const setAsset =
     async (code: string, roomSet: RoomSet, betAmount: number, winnerPosition: number): Promise<boolean> => {
-        const result = false
+        let result = false
         const roomIndex: number = getRoomIndexFromCode(code, roomSet)
         const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
         const rewardRatio: number = 0.9 * (numberOfPlayers - 1)
-        if (roomIndex != -1
-            && numberOfPlayers > 0
-            && winnerPosition >= 0
-            && winnerPosition < numberOfPlayers
-            && betAmount >= 0) {
-            const winnerAddress: string = roomSet[roomIndex].players[winnerPosition].socketUser.user.address
-            roomSet[roomIndex].players[winnerPosition].socketUser.user.asset += rewardRatio * betAmount
-            const loserAddresses: string[] = []
-            for (let i = 0; i < numberOfPlayers; i++) {
-                if (i != winnerPosition) {
-                    loserAddresses.push(roomSet[roomIndex].players[i].socketUser.user.address)
-                    roomSet[roomIndex].players[i].socketUser.user.asset -= betAmount
-                }
-            }
-            const winner: User | null = await getUser(winnerAddress)
-            if (winner != null) {
-                winner.asset += rewardRatio * betAmount
-                await updateUser(winner)
-            }
-            const losers: User[] = []
-            for (const loserAddress of loserAddresses) {
-                const loser: User | null = await getUser(loserAddress)
-                if (loser != null) {
-                    losers.push(loser)
-                }
-            }
-            for (const loser of losers) {
-                loser.asset -= betAmount
-                await updateUser(loser)
+        if (roomIndex == -1
+            || numberOfPlayers > 0
+            || winnerPosition < 0
+            || winnerPosition > numberOfPlayers - 1
+            || betAmount < 0) {
+            return result
+        }
+        const winnerAddress = roomSet[roomIndex].players[winnerPosition].socketUser.user.address
+        roomSet[roomIndex].players[winnerPosition].socketUser.user.asset += rewardRatio * betAmount
+        const loserAddresses: string[] = []
+        for (let i = 0; i < numberOfPlayers; i++) {
+            if (i != winnerPosition) {
+                loserAddresses.push(roomSet[roomIndex].players[i].socketUser.user.address)
+                roomSet[roomIndex].players[i].socketUser.user.asset -= betAmount
             }
         }
+        const winner: User | null = await getUser(winnerAddress)
+        if (winner != null) {
+            winner.asset += rewardRatio * betAmount
+            await updateUser(winner)
+        }
+        const losers: User[] = []
+        for (const loserAddress of loserAddresses) {
+            const loser: User | null = await getUser(loserAddress)
+            if (loser != null) {
+                losers.push(loser)
+            }
+        }
+        for (const loser of losers) {
+            loser.asset -= betAmount
+            await updateUser(loser)
+        }
+        result = true
         return result
     } 
