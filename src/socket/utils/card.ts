@@ -8,33 +8,33 @@ export const setAllPlayersHandsWhenStart =
         const roomIndex: number = getRoomIndexFromCode(code, roomSet)
         const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
         let maxRank = -1
-        if (roomIndex != -1 && numberOfPlayers > 0) {
-            for (let i = 0; i < numberOfPlayers; i++) {
-                const firstCard: Card | null = getCardFromIndex(deck.deck[3 * i].cardPosition)
-                const secondCard: Card | null = getCardFromIndex(deck.deck[3 * i + 1].cardPosition)
-                const thirdCard: Card | null = getCardFromIndex(deck.deck[3 * i + 2].cardPosition)
-                if (firstCard != null
-                    && secondCard != null
-                    && thirdCard != null) {
-                    const cards: Card[] = [firstCard, secondCard, thirdCard]
-                    const handRank: number = getHandRank(cards)
-                    if (handRank > maxRank) {
-                        maxRank = handRank
-                        playerIndexHasMaxRank = i
-                    }
-                    const result: HandState | null = getHandState(cards)
-                    if (result != null) {
-                        const hand: Hand = {
-                            cards: cards,
-                            result: result,
-                            isWinner: false
-                        }
-                        roomSet[roomIndex].players[i].hand = hand
-                    }
-                }
+        if (roomIndex == -1 || numberOfPlayers == 0) { return playerIndexHasMaxRank }
+        for (let i = 0; i < numberOfPlayers; i++) {
+            const firstCard: Card | null = getCardFromIndex(deck.deck[3 * i].cardPosition)
+            const secondCard: Card | null = getCardFromIndex(deck.deck[3 * i + 1].cardPosition)
+            const thirdCard: Card | null = getCardFromIndex(deck.deck[3 * i + 2].cardPosition)
+            if (firstCard == null
+                || secondCard == null
+                || thirdCard == null) {
+                return playerIndexHasMaxRank
             }
-            roomSet[roomIndex].players[playerIndexHasMaxRank].hand.isWinner = true
+            const cards: Card[] = [firstCard, secondCard, thirdCard]
+            const handRank: number = getHandRank(cards)
+            if (handRank > maxRank) {
+                maxRank = handRank
+                playerIndexHasMaxRank = i
+            }
+            const result: HandState | null = getHandState(cards)
+            if (result != null) {
+                const hand: Hand = {
+                    cards: cards,
+                    result: result,
+                    isWinner: false
+                }
+                roomSet[roomIndex].players[i].hand = hand
+            }
         }
+        roomSet[roomIndex].players[playerIndexHasMaxRank].hand.isWinner = true
         return playerIndexHasMaxRank
     }
 export const setAllPlayersHandsWhenTerminate
