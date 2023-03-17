@@ -4,9 +4,7 @@ import { DecksWithTxHash, RoomSet } from './type'
 import http, {Server as HttpServer} from 'http'
 import {Server as WebSocketServer} from 'socket.io'
 import { disconnectSocket, gameRoomSocket, waitingRoomSocket } from './socket'
-import cors from 'cors'
 const app: Application = new App().app
-app.use(cors())
 const httpServer: HttpServer = http.createServer(app)
 
 const io: WebSocketServer = new WebSocketServer(httpServer, {
