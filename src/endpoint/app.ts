@@ -8,10 +8,10 @@ export class App {
     configBodyParser = (): void => {
         this.app.use(bodyParser.json())
         this.app.use(bodyParser.urlencoded({ extended: true }))
+        this.app.use(cors())
     }
     constructor() {
         this.app = express()
-        this.app.use(cors())
         this.configBodyParser()
     }
 } 
