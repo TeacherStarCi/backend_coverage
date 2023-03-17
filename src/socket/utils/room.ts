@@ -149,7 +149,6 @@ export const createPlayer =
         }
         return result
     }
-
 export const setSocketUserPositionInRoom =
     (code: string, roomSet: RoomSet, when: 'start' | 'terminate'): boolean => {
         let result = false
@@ -159,13 +158,13 @@ export const setSocketUserPositionInRoom =
             switch (when) {
             case 'start':
                 for (let i = 0; i < numberOfPlayers; i++) {
-                    roomSet[roomIndex].players[i].socketUser.position.state = 'inProgress'
+                    roomSet[roomIndex].players[i].socketUser.position = { location: 'gameRoom', state: 'inProgress' }
 
                 }
                 break
             case 'terminate':
                 for (let i = 0; i < numberOfPlayers; i++) {
-                    roomSet[roomIndex].players[i].socketUser.position.state = 'indie'
+                    roomSet[roomIndex].players[i].socketUser.position = { location: 'gameRoom', state: 'indie' }
                 }
                 break
             }

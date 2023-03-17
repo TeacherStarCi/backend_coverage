@@ -178,7 +178,7 @@ describe('Room utils tests', () => {
         const failure: boolean = setSocketUserPositionInRoom('sample', roomClone, 'terminate')
         const playerPosition: number = getPlayerCurrentPositionInRoom('1', roomClone)
         // test if set successfully
-        expect(roomClone[0].players[playerPosition].socketUser.position.state).toEqual('inProgress')
+        expect(roomClone[0].players[playerPosition].socketUser.position).toEqual( {location: 'gameRoom' , state:'inProgress'} )
         expect(success).toBeTruthy()
         expect(successOtherCase).toBeTruthy()
         expect(failure).toBeFalsy()

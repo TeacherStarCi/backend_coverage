@@ -1,7 +1,7 @@
 export type Transaction = {
     txHash: string,
     sender: string,
-    receiver: string,  
+    receiver: string,
     result: boolean,
     amount: number,
     fee: number,
@@ -11,7 +11,7 @@ export type Transaction = {
 
 export type User = {
     address: string,
-    username: string, 
+    username: string,
     asset: number,
     deposits?: Transaction[],
     withdraws?: Transaction[]
@@ -19,11 +19,14 @@ export type User = {
 
 
 export type SocketUser = {
-    socketId: string, 
+    socketId: string,
     user: User,
     position: Position
 }
 export type Position = {
-    location: 'waitingRoom' | 'gameRoom',
-    state?: 'indie' | 'inProgress' 
+    location: 'waitingRoom'
+} | {
+    location: 'gameRoom'
+    state: 'indie'|'inProgress'
 }
+   

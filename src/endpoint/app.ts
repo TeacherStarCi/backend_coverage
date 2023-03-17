@@ -1,6 +1,5 @@
 import express, { Application } from 'express'
 import bodyParser from 'body-parser'
-import cors from 'cors'
 
 export class App {
     app: Application
@@ -12,7 +11,5 @@ export class App {
     constructor() {
         this.app = express()
         this.configBodyParser()
-        this.app.use(cors())
-        this.app.listen(3001)
     }
 } 

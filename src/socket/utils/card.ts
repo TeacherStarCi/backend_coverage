@@ -1,7 +1,7 @@
 import { getUser, updateUser } from '../../database'
 import { getCardFromIndex, getHandRank, getHandState } from '../../service/game'
-import { Card, DeckWithTxHash, Hand, HandState, RoomSet, User } from '../../type'
-import { getNumberOfPlayers, getRoomIndexFromCode } from './room'
+import { Card, DeckWithTxHash, Hand, HandState, Room, RoomSet, User } from '../../type'
+import { getNumberOfPlayers, getRoomFromCode, getRoomIndexFromCode } from './room'
 export const setAllPlayersHandsWhenStart =
     (code: string, roomSet: RoomSet, deck: DeckWithTxHash): number => {
         let playerIndexHasMaxRank = -1
@@ -48,6 +48,27 @@ export const setAllPlayersHandsWhenTerminate
             }
         }
     }
+
+export const checkAsset =
+    async (code: string, roomSet: RoomSet, betAmount: number): Promise<boolean> => {
+        let result = true
+        const addresses: string[] = []
+        const room: Room | null = getRoomFromCode(code, roomSet)
+        if (room != null) {
+            room.players.forEach(player => {
+                addresses.push(player.socketUser.user.address)
+            }
+            )
+        }
+        for (const address of addresses){
+            const user: User | null = await getUser(address)
+            if (user.asset < betAmount) {
+                result = false
+            }
+        }
+        return result
+    }
+
 export const setAsset =
     async (code: string, roomSet: RoomSet, betAmount: number, winnerPosition: number): Promise<boolean> => {
         let result = false
@@ -55,7 +76,7 @@ export const setAsset =
         const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
         const rewardRatio: number = 0.9 * (numberOfPlayers - 1)
         if (roomIndex == -1
-            || numberOfPlayers > 0
+            || numberOfPlayers < 1
             || winnerPosition < 0
             || winnerPosition > numberOfPlayers - 1
             || betAmount < 0) {

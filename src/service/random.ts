@@ -63,11 +63,11 @@ export const getDecksFromContract
                     const length: number = deckSet.decks.length
                     for (let i = 0; i < length; i++) {
                         let j = 0
-                        const cardPositions: CardPosition[] = deckSet.decks[i].map(cardPosition => {
+                        const cardPositions: CardPosition[] = deckSet.decks[i].map(cardValue => {
                             j++
                             return {
-                                cardValue: j,
-                                cardPosition: cardPosition
+                                cardValue: cardValue,
+                                cardPosition: j
                             }
                         }
                         )
