@@ -1,6 +1,6 @@
 import express, { Application } from 'express'
 import bodyParser from 'body-parser'
-import cors from 'cors'
+import cors, { CorsOptions } from 'cors'
 
 export class App {
     app: Application
@@ -8,7 +8,10 @@ export class App {
     configBodyParser = (): void => {
         this.app.use(bodyParser.json())
         this.app.use(bodyParser.urlencoded({ extended: true }))
-        this.app.use(cors())
+        const corsOptions: CorsOptions = {
+            origin: 'abc.com'
+        }
+        this.app.use(cors(corsOptions))
     }
     constructor() {
         this.app = express()
