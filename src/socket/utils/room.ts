@@ -123,11 +123,21 @@ export const getPlayer =
         }
         return result
     }
-
+export const checkPlayerExisted = (address: string, roomSet: RoomSet): boolean => {
+    let result = false
+    const currentRoom: Room | undefined = roomSet.find((room: Room) =>
+        typeof room.players.find((player: Player) =>
+            player.socketUser.user.address == address) != 'undefined')
+    if (typeof currentRoom != 'undefined') {
+        result = true
+    }
+    return result
+}
 export const createPlayer =
-    (socketId: string, user: User, code: string, roomSet: RoomSet): boolean => {
-        let result = false
+    (socketId: string, user: User, code: string, roomSet: RoomSet): 'success' | 'signed somewhere' | 'max players' | null => {
         const roomIndex: number = getRoomIndexFromCode(code, roomSet)
+        const check = checkPlayerExisted(user.address, roomSet)
+        if (check) return 'signed somewhere'
         if (roomIndex != -1) {
             const socketUser: SocketUser = {
                 socketId: socketId,
@@ -144,10 +154,12 @@ export const createPlayer =
                     remain: true
                 }
                 roomSet[roomIndex].players.push(player)
-                result = true
+                return 'success'
+            } else {
+                return 'max players'
             }
         }
-        return result
+        return null
     }
 export const setSocketUserPositionInRoom =
     (code: string, roomSet: RoomSet, when: 'start' | 'terminate'): boolean => {
@@ -174,7 +186,9 @@ export const setSocketUserPositionInRoom =
     }
 
 export const createNewRoom =
-    (code: string, betAmount: number, roomSet: RoomSet): boolean => {
+    (code: string, address: string, betAmount: number, roomSet: RoomSet): boolean => {
+        const check = checkPlayerExisted(address, roomSet)
+        if (check) return false
         let result = true
         const roomIndex: number = getRoomIndexFromCode(code, roomSet)
         if (roomIndex != -1) {
@@ -221,4 +235,20 @@ export const deleteNotRemainPlayer =
             }
         }
         return results
+    }
+
+export const generateRandomAvailableCode =
+    (roomSet: RoomSet): string | null => {
+        let result: string | null = null
+        const codes: string[] = roomSet.map(room => room.code)
+        if (codes.length == Math.pow(10, 6)) {
+            return result
+        }
+        do {
+            result = ''
+            for (let i = 0; i < 6; i++) {
+                result += Math.floor(Math.random() * 10).toString()
+            }
+        } while (typeof codes.find(code => code == result) != 'undefined')
+        return result
     }

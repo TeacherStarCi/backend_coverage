@@ -7,32 +7,27 @@ export const disconnectSocket = (io: Server, socket: Socket, roomSet: RoomSet) =
     socket.on('disconnect', (reason: DisconnectReason) => {
         // print reason
         console.log(reason)
-
         const player: Player | null = getPlayer(socket.id, roomSet)
         const room: Room | null = getPlayerCurrentRoom(socket.id, roomSet)
-
-        if (player != null && room != null) {
+        if (player == null || room == null) return
+        const code: string = room.code
+        switch (player.socketUser.position.location) {
+        case 'gameRoom':
             // if player in a room, but not start a game
-            const code: string = room.code
-            switch (player.socketUser.position) {
-            case {
-                location: 'gameRoom',
-                state: 'indie'
-            }:
+            if (player.socketUser.position.state == 'indie') {
                 deletePlayerFromRoom(socket.id, roomSet)
-                io.to(code).emit('update room', getRoomFromCode(code, roomSet))
-                break
-
-            // if player in a room, and in a game
-            case {
-                location: 'gameRoom',
-                state: 'inProgress',
-            }:
+                io.emit('update room set', roomSet)
+            } else {
+                // if player in a room, and in a game
                 setPlayerRemain(socket.id, roomSet, false)
                 io.to(code).emit('update room', getRoomFromCode(code, roomSet))
-                break
             }
+            break
+        case 'waitingRoom':
+
+            break
         }
+        
     }
     )
 }

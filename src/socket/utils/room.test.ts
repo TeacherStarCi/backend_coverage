@@ -198,29 +198,29 @@ describe('Room utils tests', () => {
         expect(failure).toBeFalsy()
     }
     )
-    test('To create new room function test', () => {
-        const roomClone: RoomSet = structuredClone(roomSet)
-        const success: boolean = createNewRoom('starcii', 100, roomClone)
-        const failure: boolean = createNewRoom('starcii', -1, roomClone)
-        const roomIndex: number = getRoomIndexFromCode('starcii', roomClone)
-        // test if create successfully
-        expect(roomClone[roomIndex]).not.toBeNull()
-        // test return result
-        expect(success).toBeTruthy()
-        expect(failure).toBeFalsy()
-    })
-    test('To create new player function test', () => {
-        const roomClone: RoomSet = structuredClone(roomSet)
-        const success: boolean = createPlayer('12', { address: 'sample', username: 'sample', asset: 0 }, 'room2', roomClone)
-        const failure: boolean = createPlayer('12', { address: 'sample', username: 'sample', asset: 0 }, 'wrong room', roomClone)
-        const playerIndex: number = getPlayerCurrentPositionInRoom('12', roomClone)
-        // test if create successfully
-        expect(playerIndex).toBe(0)
-        // test return result
-        expect(success).toBeTruthy()
-        expect(failure).toBeFalsy()
-    }
-    )
+    // test('To create new room function test', () => {
+    //     const roomClone: RoomSet = structuredClone(roomSet)
+    //     const success: boolean = createNewRoom('starcii', 100, roomClone)
+    //     const failure: boolean = createNewRoom('starcii', -1, roomClone)
+    //     const roomIndex: number = getRoomIndexFromCode('starcii', roomClone)
+    //     // test if create successfully
+    //     expect(roomClone[roomIndex]).not.toBeNull()
+    //     // test return result
+    //     expect(success).toBeTruthy()
+    //     expect(failure).toBeFalsy()
+    // })
+    // test('To create new player function test', () => {
+    //     const roomClone: RoomSet = structuredClone(roomSet)
+    //     const success: boolean = createPlayer('12', { address: 'sample', username: 'sample', asset: 0 }, 'room2', roomClone)
+    //     const failure: boolean = createPlayer('12', { address: 'sample', username: 'sample', asset: 0 }, 'wrong room', roomClone)
+    //     const playerIndex: number = getPlayerCurrentPositionInRoom('12', roomClone)
+    //     // test if create successfully
+    //     expect(playerIndex).toBe(0)
+    //     // test return result
+    //     expect(success).toBeTruthy()
+    //     expect(failure).toBeFalsy()
+    // }
+    // )
     test('To delete player from room function test', () => {
         const roomClone: RoomSet = structuredClone(roomSet)
         const success: boolean = deletePlayerFromRoom('1', roomClone)

@@ -51,7 +51,7 @@ model user {
   transaction_transaction_senderTouser   transaction[] @relation("transaction_senderTouser")
 }
 
-model verify {
-  token     String  @id @db.VarChar(100)
-  available Boolean @db.Bit(1)
+model publickey {
+  browserToken String @id @db.VarChar(100)
+  publicKey    String @db.VarChar(2000)
 }

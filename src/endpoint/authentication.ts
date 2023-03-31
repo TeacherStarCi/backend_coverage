@@ -1,5 +1,6 @@
 import { Application, Request, Response } from 'express'
-import { addJwtToken, addUser, getLastedJwtTokenMatchedAddress, getUser, getUserWithTransaction } from '../database'
+import { addJwtToken, addUser, getUser, getLatestJwtTokenMatchedAddress, getUserWithTransaction } from '../database'
+import { addPublicKey } from '../database/publicKey'
 import { jwtDecodeWithHashSecret, jwtSignWithHashSecret } from '../hash'
 import { DecodedJwtToken, User } from '../type'
 
@@ -13,7 +14,7 @@ export const authenticationEndpoint = (app: Application) => {
             if (decode == null) {
                 const address = decode.address
                 const exp = decode.exp
-                const lastedToken: string | null = await getLastedJwtTokenMatchedAddress(address)
+                const lastedToken: string | null = await getLatestJwtTokenMatchedAddress(address)
                 if (lastedToken != null) {
                     const currentTime: number = Date.now()
                     if (exp * 1000 < currentTime) {
@@ -67,6 +68,26 @@ export const authenticationEndpoint = (app: Application) => {
                 user: user,
                 token: token
             }
+        }
+        finally {
+            response.json(responseBody)
+        }
+    }
+    )
+    app.post('/update-public-key', async (request: Request, response: Response): Promise<void> => {
+        const responseBody: { status: true } = { status: true }
+        try {
+            const requestBody:
+                {
+                    browserToken: string,
+                    publicKey: string
+                }
+                = request.body
+            const browserToken = requestBody.browserToken
+            const publicKey = requestBody.publicKey 
+            console.log(browserToken)
+            console.log(publicKey)
+            await addPublicKey(browserToken, publicKey)
         }
         finally {
             response.json(responseBody)

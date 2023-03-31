@@ -9,7 +9,7 @@ export class App {
         this.app.use(bodyParser.json())
         this.app.use(bodyParser.urlencoded({ extended: true }))
         const corsOptions: CorsOptions = {
-            origin: 'abc.com'
+            origin: '*'
         }
         this.app.use(cors(corsOptions))
     }

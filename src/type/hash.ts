@@ -4,8 +4,3 @@ export type DecodedJwtToken =
         iat: number,
         exp: number
     }
-
-export type VerifyToken = {
-        token: string,
-        available : boolean
-    }

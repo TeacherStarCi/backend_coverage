@@ -1,6 +1,6 @@
 
 import { jwtSignWithHashSecret } from '../hash'
-import { addJwtToken, getLastedJwtTokenMatchedAddress } from './jwt'
+import { addJwtToken, getLatestJwtTokenMatchedAddress } from './jwt'
 describe('Jwt model test', () => {
     test('To add jwt token test', async () => {
         const token = '123deptrai' + Date.now().toString()
@@ -16,8 +16,8 @@ describe('Jwt model test', () => {
         const token = jwtSignWithHashSecret(address, 60 * 60)
         await addJwtToken(token)
         // check token if address true
-        expect(await getLastedJwtTokenMatchedAddress(address)).toEqual(token)
+        expect(await getLatestJwtTokenMatchedAddress(address)).toEqual(token)
         // check token if address false
-        expect(await getLastedJwtTokenMatchedAddress('wrong address')).toEqual('')
+        expect(await getLatestJwtTokenMatchedAddress('wrong address')).toEqual('')
     })
 })

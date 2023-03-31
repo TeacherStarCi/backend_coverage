@@ -12,12 +12,13 @@ export const gameRoomSocket = (io: Server, socket: Socket,
         const betAmount: number = room.betAmount
         const check: boolean = await checkAsset(code, roomSet, betAmount)
         if (!check) {
-            io.to(code).emit('throw error', {message: 'a player is lack of money'})
+            io.to(code).emit('throw error', {message: 'At least one player is lack of money'})
             return
         }
         const numberOfPlayers: number = getNumberOfPlayers(code, roomSet)
         if (numberOfPlayers < 2){
-            io.to(code).emit('throw error', {message: 'not enough players'})
+            io.to(code).emit('throw error', {message: 'Not enough player'}) 
+            return
         }
         let txHash = ''
         if (deckStorage.length == 0) {
@@ -36,7 +37,8 @@ export const gameRoomSocket = (io: Server, socket: Socket,
             if (thisRoom != null) {
                 await setAsset(code, roomSet, thisRoom.betAmount, winnerPosition)
             }
-            io.to(code).emit('update room', getRoomFromCode(code, roomSet))
+            io.emit('update room set', roomSet)
+            io.to(code).emit('to terminate')
         }
     }
     )
@@ -44,8 +46,7 @@ export const gameRoomSocket = (io: Server, socket: Socket,
         setAllPlayersHandsWhenTerminate(code, roomSet)
         setSocketUserPositionInRoom(code, roomSet, 'terminate')
         deleteNotRemainPlayer(code, roomSet)
-        io.to(code).emit('update room', getRoomFromCode(code, roomSet))
+        io.emit('update room set', roomSet) 
     }
     )
-
 }

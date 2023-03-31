@@ -19,7 +19,7 @@ export const addJwtToken =
         await prisma.$disconnect()
         return result
     }
-export const getLastedJwtTokenMatchedAddress =
+export const getLatestJwtTokenMatchedAddress =
     async (address: string): Promise<string | null> => {
         let result = ''
         let tokens: {token: string}[] = []

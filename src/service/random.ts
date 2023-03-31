@@ -58,6 +58,7 @@ export const getDecksFromContract
                     }
                     )
                     await sleep(5000)
+                    console.log(deckSet)
                 }
                 if (deckSet != null) {
                     const length: number = deckSet.decks.length

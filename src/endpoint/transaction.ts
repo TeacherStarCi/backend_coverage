@@ -1,36 +1,28 @@
 import { Application, Request, Response } from 'express'
 import { getUser, updateUser } from '../database'
 import { addTransaction } from '../database/transaction'
-import { addVerify, checkVerifyToken, setVerifyAvailable } from '../database/verify'
-import { getHashedFromCurrentTimestamp } from '../hash'
 import { getStargateWalletAndClient } from '../service/client'
 import { StargateWalletAndClient, Transaction, User } from '../type'
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
 import { SigningStargateClient, Coin, StdFee } from '@cosmjs/stargate'
 import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate'
+import { convertUTCDateToLocalDate } from '../service/date'
+import NodeRSA from 'node-rsa'
+import { getPublicKey } from '../database/publicKey'
 
 export const transactionEndpoint = (app: Application) => {
-    app.post('/get-verify-token', async (response: Response) => {
-        let responseBody: { status: true, token: string } | { status: false, error: string } =
-            { status: false, error: '' }
-        try {
-            const verifyToken: string = getHashedFromCurrentTimestamp('verify')
-            await addVerify(verifyToken)
-            responseBody = { status: true, token: verifyToken }
-        }
-        finally {
-            response.json(responseBody)
-        }
-    }
-    )
+
     const exponent = 1 / 1000000
     const inverseExponent = 1000000
     app.post('/deposit', async (request: Request, response: Response) => {
         let responseBody: { status: true, user: User } | { status: false, error: string } =
             { status: false, error: '' }
         try {
-            const requestBody: { txHash: string } = request.body
+            const requestBody: { txHash: string, address: string, signature: string, browserToken: string } = request.body
+            const matchedAddress: string = requestBody.address
             const txHash: string = requestBody.txHash
+            const signature: string = requestBody.signature
+            const browserToken: string = requestBody.browserToken
             const lcdEndpontTxHash: string | undefined = process.env.LCD_ENDPOINT_TXHASH
             if (typeof lcdEndpontTxHash != 'undefined') {
                 // data fetched from response
@@ -42,14 +34,25 @@ export const transactionEndpoint = (app: Application) => {
                 const fee: number = Number.parseInt(fetchRequestBody.tx.auth_info.fee.amount[0].amount) * exponent
                 const height: number = Number.parseInt(fetchRequestBody.tx_response.height)
                 const time: Date = new Date(fetchRequestBody.tx_response.timestamp)
-                // memo
-                const memo: string = fetchRequestBody.tx.body.memo
-                // handle db
-                if (!await checkVerifyToken(memo)) {
-                    responseBody = { status: false, error: 'Token is invalidated' }
+                const publicKey: string | null = await getPublicKey(browserToken)
+                if (publicKey == null) return
+                const key: NodeRSA = new NodeRSA(publicKey)
+                const signResult = key.verify(txHash, Buffer.from(signature))
+                if (signResult) {
+                    responseBody = { status: false, error: 'Verify failed' }
                     throw new Error()
                 }
-                await setVerifyAvailable(memo, false)
+                // handle db
+                if (matchedAddress != sender) {
+                    responseBody = { status: false, error: 'Address is not matched' }
+                    throw new Error()
+                }
+
+                // 15 seconds for a single transaction
+                if (Date.now() - time.getTime() > 15 * 1000) {
+                    responseBody = { status: false, error: 'Transaction time out' }
+                    throw new Error()
+                }
                 const transaction: Transaction = {
                     txHash: txHash,
                     sender: sender,
@@ -58,7 +61,7 @@ export const transactionEndpoint = (app: Application) => {
                     amount: amount,
                     fee: fee,
                     height: height,
-                    time: time
+                    time: convertUTCDateToLocalDate(time)
                 }
                 await addTransaction(transaction)
                 if (!result) {
@@ -72,6 +75,9 @@ export const transactionEndpoint = (app: Application) => {
                     responseBody = { status: true, user: user }
                 }
             }
+        }
+        catch (error: unknown) {
+            //no code  
         }
         finally {
             response.json(responseBody)
@@ -101,7 +107,7 @@ export const transactionEndpoint = (app: Application) => {
                     const wallet: DirectSecp256k1HdWallet = stargateWalletAndClinet.wallet
                     const client: SigningStargateClient = stargateWalletAndClinet.client
                     const serverAddress = (await wallet.getAccounts())[0].address
-                    const serverBalance: Coin = await client.getBalance(address, denom)
+                    const serverBalance: Coin = await client.getBalance(serverAddress, denom)
                     const serverBalanceValue = Number.parseInt(serverBalance.amount) * exponent
                     if (serverBalanceValue < requestAmount + 1) {
                         // ensure that server always have money
@@ -153,7 +159,10 @@ export const transactionEndpoint = (app: Application) => {
                     }
                 }
             }
-        } finally {
+        } catch (error: unknown) {
+            //no code  
+        }
+        finally {
             response.json(responseBody)
         }
     }
